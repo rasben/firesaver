@@ -1,0 +1,63 @@
+$assets_path: '../../assets/compressed';
+
+@mixin full-size() {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@mixin set-bg($image) {
+  background: url(#{$assets_path}/#{$image}) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+@mixin create-variant($variant) {
+  &.is-#{$variant} {
+    .firesaver__fg {
+      background-image: url(#{$assets_path}/fg_#{$variant}.png);
+    }
+
+    .firesaver__bg {
+      background-image: url(#{$assets_path}/bg_#{$variant}.png);
+    }
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.firesaver {
+  @include full-size();
+
+  &__fg {
+    z-index: 3;
+    @include full-size();
+    @include set-bg('fg_day.png');
+  }
+
+  &__bg {
+    z-index: 1;
+    @include full-size();
+    @include set-bg('bg_day.png');
+  }
+
+  @include create-variant('dusk');
+  @include create-variant('night');
+}
+
+.firesaver__elements {
+  z-index: 2;
+}
+
+.firesaver__clouds {
+  z-index: 2;
+  @include full-size();
+  @include set-bg('clouds.png');
+}
