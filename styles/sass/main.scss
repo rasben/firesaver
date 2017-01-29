@@ -1,5 +1,8 @@
 $assets_path: '../../assets/compressed';
 
+@import url('https://fonts.googleapis.com/css?family=Lato:400,900');
+
+
 @mixin full-size() {
   position: absolute;
   top: 0;
@@ -17,47 +20,234 @@ $assets_path: '../../assets/compressed';
 }
 
 @mixin create-variant($variant) {
-  &.is-#{$variant} {
-    .firesaver__fg {
-      background-image: url(#{$assets_path}/fg_#{$variant}.png);
-    }
+  .firesaver__fg.is-#{$variant} {
 
-    .firesaver__bg {
-      background-image: url(#{$assets_path}/bg_#{$variant}.png);
-    }
+    background-image: url(#{$assets_path}/fg_#{$variant}.png);
+
+
+  }
+
+  .firesaver__bg.is-#{$variant} {
+
+
+
+    background-image: url(#{$assets_path}/bg_#{$variant}.png);
   }
 }
+
+@keyframes cloud {
+  0% {
+    transform:translateX(-100%);
+  }
+  100% {
+    transform:translateX(100%);
+  }
+}
+
+@keyframes timelapse-day {
+  0%    { opacity: 1 }
+  10%   { opacity: 1 }
+  20%   { opacity: 1 }
+  30%   { opacity: 0 }
+  40%   { opacity: 0 }
+  50%   { opacity: 0 }
+  60%   { opacity: 0 }
+  70%   { opacity: 0 }
+  80%   { opacity: 0 }
+  90%   { opacity: 0 }
+  100%  { opacity: 1 }
+}
+
+@keyframes timelapse-dusk {
+  0%    { opacity: 0 }
+  10%   { opacity: 0 }
+  20%   { opacity: 1 }
+  30%   { opacity: 1 }
+  40%   { opacity: 1 }
+  50%   { opacity: 0 }
+  60%   { opacity: 0 }
+  70%   { opacity: 0 }
+  80%   { opacity: 1 }
+  90%   { opacity: 1 }
+  100%  { opacity: 1 }
+}
+
+@keyframes timelapse-night {
+  0%    { opacity: 0 }
+  10%   { opacity: 0 }
+  20%   { opacity: 0 }
+  30%   { opacity: 0 }
+  40%   { opacity: 1 }
+  50%   { opacity: 1 }
+  60%   { opacity: 1 }
+  70%   { opacity: 1 }
+  80%   { opacity: 1 }
+  90%   { opacity: 0 }
+  100%  { opacity: 0 }
+}
+
+@keyframes timelapse-text {
+  0%   { opacity: 0 }
+  25%   { opacity: 1 }
+  50%   { opacity: 1 }
+  100%   { opacity: 0 }
+}
+
+
+@keyframes orbit {
+ 0%  { -webkit-transform: rotate(0deg) translateX(5%) translateY(33%) rotate(0deg)}
+ 25%  { -webkit-transform: rotate(90deg) translateX(5%) translateY(33%) rotate(-90deg)}
+ 50%  { -webkit-transform: rotate(180deg) translateX(5%) translateY(33%) rotate(-180deg)}
+ 75%  { -webkit-transform: rotate(270deg) translateX(5%) translateY(33%) rotate(-270deg)}
+ 100%  { -webkit-transform: rotate(360deg) translateX(5%) translateY(33%) rotate(-360deg)}
+}
+
 
 html, body {
   margin: 0;
   padding: 0;
+  background-color: #60656d;
+  font-family: 'Lato', sans-serif;
+
 }
 
 .firesaver {
   @include full-size();
 
-  &__fg {
-    z-index: 3;
-    @include full-size();
-    @include set-bg('fg_day.png');
-  }
-
-  &__bg {
-    z-index: 1;
-    @include full-size();
-    @include set-bg('bg_day.png');
-  }
-
-  @include create-variant('dusk');
-  @include create-variant('night');
+  overflow: hidden;
 }
 
+
+
+
+@include create-variant('day');
+@include create-variant('dusk');
+@include create-variant('night');
+
+.firesaver__bg,
+.firesaver__fg {
+  display: block;
+  animation: 10s linear infinite;
+
+  @include full-size();
+  @include set-bg('fg_day.png');
+
+  &.is-day {
+    animation-name: timelapse-day;
+  }
+
+  &.is-dusk {
+    animation-name: timelapse-dusk;
+
+  }
+
+  &.is-night {
+    animation-name: timelapse-night;
+
+  }
+
+}
+
+.firesaver__fg {
+  z-index: 3;
+  &.is-day {
+    z-index: 33;
+  }
+
+  &.is-dusk {
+    z-index: 32;
+  }
+
+  &.is-night {
+    z-index: 31;
+  }
+}
+
+.firesaver__bg {
+  z-index: 1;
+  &.is-day {
+    z-index: 13;
+  }
+
+  &.is-dusk {
+    z-index: 12;
+  }
+
+  &.is-night {
+    z-index: 11;
+  }
+}
+
+
+
+
+// Elements
+
 .firesaver__elements {
-  z-index: 2;
+  z-index: 420;
 }
 
 .firesaver__clouds {
-  z-index: 2;
   @include full-size();
-  @include set-bg('clouds.png');
+
+  z-index: 21;
+
+  &:before,
+  &:after {
+
+    @include full-size();
+    @include set-bg('clouds.png');
+
+    content: '';
+    animation: cloud 20s linear infinite;
+  }
+
+  &:after {
+    transform:translateX(-100%);
+    animation-delay: 10s;
+  }
+}
+
+.firesaver__sun,
+.firesaver__moon {
+  @include full-size();
+  background: url(#{$assets_path}/moon.png) no-repeat center center fixed;
+  background-size: 10vw;
+  z-index: 22;
+  animation: orbit 10s linear infinite;
+}
+
+.firesaver__sun {
+  background-size: 30vw;
+  background-image: url(#{$assets_path}/../sun.png);
+  animation-delay: 5s;
+  transform:rotate(-180deg) translateX(100%);
+}
+
+.firesaver__text {
+  opacity: 0;
+    z-index: 20;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 13vw;
+    color: #fff;
+
+    transform: translate(-50%, -50%);
+    margin-top: -11.5vw;
+    animation: timelapse-text 7s linear;
+
+    &.is-first {
+
+
+    }
+
+    &.is-second {
+      animation-delay: 7s;
+
+    }
+
+    &.is-third {
+      animation-delay: 14s;
+    }
 }
